@@ -56,8 +56,7 @@ pipeline {
         parallel(
           "package": {
             mvn package
-            
-          },
+           },
           "Run in parallel": {
             echo 'packaging...'
             
