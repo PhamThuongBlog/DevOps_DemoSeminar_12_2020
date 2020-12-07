@@ -41,7 +41,7 @@ pipeline {
       steps {
         parallel(
           "run Static code analysis": {
-            cobertura:cobertura
+            pmd:pmd
             
           },
           "Run in parallel": {
@@ -55,7 +55,7 @@ pipeline {
       steps {
         parallel(
           "package": {
-            package
+            mvn package
             
           },
           "Run in parallel": {
