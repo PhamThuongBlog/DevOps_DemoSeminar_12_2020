@@ -1,0 +1,80 @@
+pipeline {
+  agent any
+  stages {
+    stage('---Stage 1: clean---') {
+      steps {
+	parallel(
+           "Run in parallel":{echo 'cleaning ...'},
+	   "Cleaning":{mvn clean}
+	)
+      }
+    }
+    stage('---Stage 2: Test ---') {
+      steps {
+        parallel(
+          "Testing": {
+            mvn test
+            
+          },
+          "Test in parallel": {
+            echo 'testing...'
+            
+          }
+        )
+      }
+    }
+    stage('---Stage 3: Coverage Code (using cobertura plugin) ---') {
+      steps {
+        parallel(
+          "run Coverage code test": {
+            cobertura:cobertura
+            
+          },
+          "Run in parallel": {
+            echo 'coverage code evaluation...'
+            
+          }
+        )
+      }
+    }
+    stage('---Stage 4: Static code analysis (using pmd plugin) ---') {
+      steps {
+        parallel(
+          "run Static code analysis": {
+            cobertura:cobertura
+            
+          },
+          "Run in parallel": {
+            echo 'Static code analysis...'
+            
+          }
+        )
+      }
+    }
+    stage('---Stage 5: package (.war) ---') {
+      steps {
+        parallel(
+          "package": {
+            package
+            
+          },
+          "Run in parallel": {
+            echo 'packaging...'
+            
+          }
+        )
+      }
+    }
+    stage('Approve') {
+      steps {
+        input 'deploy to staging?'
+      }
+    }
+    stage('Deploy') {
+      steps {
+            echo 'deployment done.'
+          }
+      }
+    }
+  }
+}
