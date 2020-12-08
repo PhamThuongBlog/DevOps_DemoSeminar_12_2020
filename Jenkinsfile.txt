@@ -38,3 +38,7 @@ pipeline {
       }
     }
   }
+  // next step: to can run the web (after packaging), we need:
+  //1. copy the addressbook.war and paste to the webapp folder of Apache Tomcat (path: C:\Program Files\Apache Software Foundation\Tomcat 9.0\webapps)
+  //2. start the Tomcat server
+  //3. run URL trong firefox: http://localhost:8080/addressbook/
