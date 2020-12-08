@@ -1,14 +1,6 @@
 pipeline {
   agent any
   stages {
-    stage('clean job') {
-      steps {
-	parallel(
-           "Run in parallel":{echo 'cleaning ...'},
-	        "Cleaning":{mvn clean}
-	)
-      }
-    }
     stage('Test job') {
       steps {
         parallel(
