@@ -1,79 +1,55 @@
 pipeline {
   agent any
   stages {
-    stage('---Stage 1: clean---') {
+    stage('clean job') {
       steps {
 	parallel(
            "Run in parallel":{echo 'cleaning ...'},
-	   "Cleaning":{mvn clean}
+	        "Cleaning":{mvn clean}
 	)
       }
     }
-    stage('---Stage 2: Test ---') {
+    stage('Test job') {
       steps {
         parallel(
-          "Testing": {
-            mvn test
-            
-          },
-          "Test in parallel": {
-            echo 'testing...'
-            
-          }
+          "Testing": {mvn test},
+          "Test in parallel": {echo 'testing...'}
         )
       }
     }
-    stage('---Stage 3: Coverage Code (using cobertura plugin) ---') {
+    stage('Coverage Code job') {
       steps {
         parallel(
-          "run Coverage code test": {
-            cobertura:cobertura
-            
-          },
-          "Run in parallel": {
-            echo 'coverage code evaluation...'
-            
-          }
+          "run Coverage code test": {mvn cobertura:cobertura},
+          "Run in parallel": {echo 'coverage code evaluation...'}
         )
       }
     }
-    stage('---Stage 4: Static code analysis (using pmd plugin) ---') {
+    stage('Static code analysis job') {
       steps {
         parallel(
-          "run Static code analysis": {
-            pmd:pmd
-            
-          },
-          "Run in parallel": {
-            echo 'Static code analysis...'
-            
-          }
+          "run Static code analysis": {mvn pmd:pmd},
+          "Run in parallel": {echo 'Static code analysis...'}
         )
       }
     }
-    stage('---Stage 5: package (.war) ---') {
+    stage('Package (.war) & Release job') {
       steps {
         parallel(
-          "package": {
-            mvn package
-           },
-          "Run in parallel": {
-            echo 'packaging...'
-            
-          }
+          "package": {mvn install},
+          "Run in parallel": {echo 'packaging...'}
         )
       }
     }
-    stage('Approve') {
+    stage('Approve Job') {
       steps {
         input 'deploy to staging?'
       }
     }
-    stage('Deploy') {
+    stage('Deploy Job') {
       steps {
             echo 'deployment done.'
           }
       }
     }
   }
-}
