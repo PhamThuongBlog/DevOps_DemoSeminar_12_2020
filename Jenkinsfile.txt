@@ -3,34 +3,26 @@ pipeline {
   stages {
     stage('Test job') {
       steps {
-        parallel(
-          "Testing": {mvn test},
-          "Test in parallel": {echo 'testing...'}
-        )
-      }
+        // Get some code from a GitHub repository
+        // git 'https://github.com/PhamThuongBlog/DevOps_DemoSeminar_12_2020.git'
+        
+        // To run Maven on a Windows agent, use
+          bat "mvn -Dmaven.test.failure.ignore=true clean package"
+        }
     }
     stage('Coverage Code job') {
       steps {
-        parallel(
-          "run Coverage code test": {mvn cobertura:cobertura},
-          "Run in parallel": {echo 'coverage code evaluation...'}
-        )
+            bat "mvn -Dmaven.test.failure.ignore=true cobertura:cobertura
       }
     }
     stage('Static code analysis job') {
       steps {
-        parallel(
-          "run Static code analysis": {mvn pmd:pmd},
-          "Run in parallel": {echo 'Static code analysis...'}
-        )
+        bat "mvn -Dmaven.test.failure.ignore=true pmd:pmd
       }
     }
     stage('Package (.war) & Release job') {
       steps {
-        parallel(
-          "package": {mvn install},
-          "Run in parallel": {echo 'packaging...'}
-        )
+        bat "mvn -Dmaven.test.failure.ignore=true package install
       }
     }
     stage('Approve Job') {
